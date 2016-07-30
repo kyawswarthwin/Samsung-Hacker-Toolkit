@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.web.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <children>
+    <MenuBar prefWidth="400.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <menus>
+        <Menu mnemonicParsing="false" text="File">
+          <items>
+            <MenuItem id="mnuFileClose" mnemonicParsing="false" text="Close" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Tools">
+          <items>
+            <Menu mnemonicParsing="false" text="Reboot">
+              <items>
+                <MenuItem disable="true" id="mnuToolsRebootDownload" mnemonicParsing="false" text="Download" />
+              </items>
+            </Menu>
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Help">
+          <items>
+            <MenuItem id="mnuHelpAbout" mnemonicParsing="false" text="About" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>
+    <Label id="lblPort" text="Port:" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="38.5" />
+    <ComboBox id="cmbPort" prefHeight="25.0" prefWidth="175.0" promptText="" AnchorPane.leftAnchor="45.0" AnchorPane.topAnchor="34.0">
+      <items>
+        <FXCollections fx:factory="observableArrayList">
+          <String fx:value="Item 1" />
+          <String fx:value="Item 2" />
+          <String fx:value="Item 3" />
+        </FXCollections>
+      </items>
+    </ComboBox>
+    <Button id="btnScan" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Scan" AnchorPane.leftAnchor="230.0" AnchorPane.topAnchor="34.0" />
+    <Button id="btnOpen" disable="true" mnemonicParsing="false" prefHeight="25.0" prefWidth="75.0" text="Open" AnchorPane.leftAnchor="315.0" AnchorPane.topAnchor="34.0" />
+    <TextArea id="txtLog" editable="false" prefHeight="521.0" prefWidth="380.0" wrapText="true" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="69.0" />
+  </children>
+</AnchorPane>

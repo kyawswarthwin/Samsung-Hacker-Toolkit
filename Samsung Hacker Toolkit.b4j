@@ -1,0 +1,104 @@
+﻿Version=3
+AppType=JavaFX
+NumberOfModules=0
+Build1=Default,b4j.example
+NumberOfFiles=1
+File1=Main.fxml
+NumberOfLibraries=5
+Library1=jcore
+Library2=jfx
+Library3=jserial
+Library4=jrandomaccessfile
+Library5=jmsgboxes
+@EndOfDesignText@
+#Region  Project Attributes 
+	#MainFormWidth: 390
+	#MainFormHeight: 590 
+#End Region
+
+Sub Process_Globals
+	Private fx As JFX
+	Private MainForm As Form
+	Private mnuFileClose As MenuItem
+	Private mnuToolsRebootDownload As MenuItem
+	Private mnuHelpAbout As MenuItem
+	Private cmbPort As ComboBox
+	Private btnScan As Button
+	Private btnOpen As Button
+	Private txtLog As TextArea
+	Private sp As Serial
+	Private astream As AsyncStreams
+	Private Msgbox As Msgboxes
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	MainForm = Form1
+	MainForm.RootPane.LoadLayout("Main")
+	MainForm.Title = "Samsung Hacker Toolkit"
+	MainForm.Resizable = False
+	MainForm.Show
+	sp.Initialize("")
+	btnScan_Action
+End Sub
+
+Sub MainForm_Closed
+	sp.Close
+End Sub
+
+Sub mnuFileClose_Action
+	MainForm.Close
+End Sub
+
+Sub mnuToolsRebootDownload_Action
+	astream.Write("AT+FUS?".GetBytes("UTF8"))
+End Sub
+
+Sub mnuHelpAbout_Action
+	Msgbox.Show("Samsung Hacker Toolkit" & CRLF & CRLF & "Version: 0.1 Beta" & CRLF & "Developed By: Kyaw Swar Thwin", "About")
+End Sub
+
+Sub cmbPort_SelectedIndexChanged(Index As Int, Value As Object)
+	btnOpen.Enabled = Index > -1
+End Sub
+
+Sub btnScan_Action
+	cmbPort.Items.Clear
+	cmbPort.Items.AddAll(sp.ListPorts)
+	cmbPort.SelectedIndex = 0
+End Sub
+
+Sub btnOpen_Action
+	If btnOpen.Text = "Close" Then
+		sp.Close
+	Else
+		sp.Open(cmbPort.Value)
+		astream.Initialize(sp.GetInputStream, sp.GetOutputStream, "AStream")
+		mnuToolsRebootDownload.Enabled = True
+		cmbPort.Enabled = False
+		btnScan.Enabled = False
+		btnOpen.Text = "Close"
+		astream.Write("AT+DEVCONINFO".GetBytes("UTF8"))
+	End If
+End Sub
+
+Sub AStream_NewData (Buffer() As Byte)
+	Dim s As String = BytesToString(Buffer, 0, Buffer.Length, "UTF8")
+	Select s.SubString2(0, s.IndexOf(":"))
+		Case "AT+DEVCONINFO+DEVCONINFO"
+			s = s.SubString(s.IndexOf(":") + 1).Trim
+			txtLog.Text = s.SubString2(0, s.IndexOf("#OK#")).Replace(";", CRLF)
+	End Select
+End Sub
+
+Sub AStream_Error
+	astream.Close
+	AStream_Terminated
+End Sub
+
+Sub AStream_Terminated
+	mnuToolsRebootDownload.Enabled = False
+	cmbPort.Enabled = True
+	btnScan.Enabled = True
+	btnOpen.Text = "Open"
+	txtLog.Text = ""
+End Sub
